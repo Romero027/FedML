@@ -13,6 +13,8 @@ import torch
 import wandb
 from mpi4py import MPI
 
+import torchvision.models as models
+
 # add the FedML root directory to the python path
 sys.path.insert(0, os.path.abspath(os.path.join(os.getcwd(), "./../../../../")))
 sys.path.insert(0, os.path.abspath(os.path.join(os.getcwd(), "./../../../")))
@@ -127,7 +129,7 @@ def load_data(args, dataset_name):
         train_data_local_num_dict, train_data_local_dict, test_data_local_dict, \
         class_num = load_partition_data_mnist(args.batch_size)
         """
-        For shallow NN or linear models, 
+        For shallow NN or linear models,
         we uniformly sample a fraction of clients each round (as the original FedAvg paper)
         """
         args.client_num_in_total = client_num
@@ -257,6 +259,8 @@ def create_model(args, model_name, output_dim):
         model = resnet56(class_num=output_dim)
     elif model_name == "mobilenet":
         model = mobilenet(class_num=output_dim)
+    elif model_name =="mobilenet_v2":
+        model = models.mobilenet_v2()
     # TODO
     elif model_name == 'mobilenet_v3':
         '''model_mode \in {LARGE: 5.15M, SMALL: 2.94M}'''
